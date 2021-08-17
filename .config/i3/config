@@ -1,0 +1,228 @@
+## DETHKHANFIG
+
+# #---Set Modifier Key---# #
+set $mod Mod4
+
+
+# #---Initialize X11---# #
+#When NVidia card dGPU is an output source use for xrandr
+exec xrandr --setprovideroutputsource modesetting nvidia
+exec sleep 3 && xrandr --output eDP-1-0 --auto
+
+
+# # ---Font & Wallpaper--- # #
+font pango:monospace 8
+# Pull wallpaper colors for colorscheme
+exec_always wal -i ${HOME}/.dotfiles/wallpapers -n
+# Had errors with NVidia handling Xorg so created delay to ensure proper wallpaper scaling
+exec_always sleep 0.2 && feh --bg-scale "$(< "${HOME}/.cache/wal/wal")"
+
+
+# #---Programs On Startup---# #
+exec   --no-startup-id picom --experimental-backends
+exec   --no-startup-id systemd-inhibit --what=handle-power-key sleep infinity
+exec   gwe --hide-window
+exec   mpd
+
+
+# #---Set Gaps Between Windows---# #
+for_window [class="^.*"] border pixel 1 
+gaps inner 16 
+gaps outer 16
+
+
+# #---Resize Gaps---# #
+bindsym $mod+z		gaps outer current plus 5
+bindsym $mod+Shift+z	gaps outer current minus 5
+bindsym $mod+x		gaps inner current plus 5
+bindsym $mod+Shift+x	gaps inner current minus 5
+
+
+# #---Dropdown Windows---# #
+# General dropdown window traits. The order can matter.
+for_window [instance="dropdown_*"] floating enable
+for_window [instance="dropdown_*"] move scratchpad
+for_window [instance="dropdown_*"] sticky enable
+for_window [instance="dropdown_*"] scratchpad show
+for_window [instance="dropdown_tmuxdd"] resize set 625 450
+for_window [instance="dropdown_dropdowncalc"] resize set 800 300
+for_window [instance="dropdown_tmuxdd"] border pixel 3
+for_window [instance="dropdown_dropdowncalc"] border pixel 2
+for_window [instance="dropdown_*"] move position center
+
+
+# #---Floating Windows---# #
+bindsym $mod+Shift+space 	floating toggle
+bindsym $mod+space	focus mode_toggle
+bindsym $mod+Shift+n	floating toggle; sticky toggle; exec --no-startup-id ~/.local/bin/hover right
+bindsym $mod+Shift+b  floating toggle; sticky toggle; exec --no-startup-id ~/.local/bin/hover left
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+
+###---Colorscheme Using Pywal---###
+# Make it clear when failed using red - otherwise set i3 colors with pywal from xresources
+set_from_resource $bg           i3wm.color0 #ff0000
+set_from_resource $bg-alt       i3wm.color14 #ff0000
+set_from_resource $fg           i3wm.color15 #ff0000
+set_from_resource $fg-alt       i3wm.color2 #ff0000
+set_from_resource $hl           i3wm.color13 #ff0000
+# class                 border      backgr. text indicator      child_border
+client.focused          $fg-alt     $bg     $hl  $fg-alt        $hl
+client.focused_inactive $fg-alt     $bg     $fg  $fg-alt        $fg-alt
+client.unfocused        $fg-alt     $bg     $fg  $fg-alt        $fg-alt
+client.urgent           $fg-alt     $bg     $fg  $fg-alt        $fg-alt
+client.placeholder      $fg-alt     $bg     $fg  $fg-alt        $fg-alt
+client.background $bg
+# i3bar colors
+bar {
+    colors {
+        background $bg
+        statusline $bg-alt
+        separator  $bg-alt
+#                          border  backgr. text
+        focused_workspace  $bg     $bg     $bg-alt
+        inactive_workspace $bg     $bg     $fg-alt
+    }
+  font pango:SF-Mono-Regular, FontAwesome 9
+	status_command i3blocks
+	position top
+	mode dock
+	modifier None
+}
+
+
+# #---Windows & Focus---# #
+# arrow keys
+bindsym $mod+Left		focus left
+bindsym $mod+Shift+Left		move left
+bindsym $mod+Ctrl+Left		move workspace to output left
+bindsym $mod+Down		focus down
+bindsym $mod+Shift+Down		move down
+bindsym $mod+Ctrl+Down		move workspace to output down
+bindsym $mod+Up			focus up
+bindsym $mod+Shift+Up		move up
+bindsym $mod+Ctrl+Up		move workspace to output up
+bindsym $mod+Right 		focus right
+bindsym $mod+Shift+Right 	move right
+bindsym $mod+Ctrl+Right		move workspace to output right
+# home keys
+bindsym $mod+h		focus left
+bindsym $mod+Shift+h		move left
+bindsym $mod+Ctrl+h		move workspace to output left
+bindsym $mod+j		focus down
+bindsym $mod+Shift+j		move down
+bindsym $mod+Ctrl+j		move workspace to output down
+bindsym $mod+k			focus up
+bindsym $mod+Shift+k		move up
+bindsym $mod+Ctrl+k		move workspace to output up
+bindsym $mod+l 		focus right
+bindsym $mod+Shift+l 	move right
+bindsym $mod+Ctrl+l		move workspace to output right
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+# make focused window fullscreen
+bindsym $mod+f  fullscreen toggle
+# kill focused window
+bindsym $mod+q kill
+# change way window splits
+bindsym $mod+slash	split vertical
+bindsym $mod+apostrophe	split horizontal
+
+
+# #---Workspaces---# #
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+# switch to workspace
+bindsym $mod+1		workspace $ws1
+bindsym $mod+2		workspace $ws2
+bindsym $mod+3		workspace $ws3
+bindsym $mod+4		workspace $ws4
+bindsym $mod+5		workspace $ws5
+bindsym $mod+6		workspace $ws6
+bindsym $mod+7		workspace $ws7
+bindsym $mod+8		workspace $ws8
+bindsym $mod+9		workspace $ws9
+bindsym $mod+0		workspace $ws10
+# move focused container to workspace
+bindsym $mod+Shift+1	move container to workspace $ws1
+bindsym $mod+Shift+2	move container to workspace $ws2
+bindsym $mod+Shift+3	move container to workspace $ws3
+bindsym $mod+Shift+4	move container to workspace $ws4
+bindsym $mod+Shift+5	move container to workspace $ws5
+bindsym $mod+Shift+6	move container to workspace $ws6
+bindsym $mod+Shift+7	move container to workspace $ws7
+bindsym $mod+Shift+8	move container to workspace $ws8
+bindsym $mod+Shift+9	move container to workspace $ws9
+bindsym $mod+Shift+0	move container to workspace $ws10
+
+
+# #--Shortcuts--# #
+# start a terminal
+bindsym $mod+Return exec st
+# start file manager
+bindsym $mod+Shift+f  exec st -e nnn
+# start muic player
+bindsym $mod+m  exec st -e ncmpcpp -s media_library
+# start text editor
+bindsym $mod+Shift+e  exec st -e lvim
+# start RSS feed reader
+bindsym $mod+n  exec st -e newsboat
+# start onscreen keyboard (media mode, this is shit make a better one)
+bindsym $mod+Shift+Q  exec onboard
+# start browser
+bindsym $mod+Shift+w	exec firefox
+# start discord
+bindsym $mod+Shift+d	exec discord
+# start Chia blockchain GUI
+bindsym $mod+Shift+a	exec ~/.local/bin/farm
+# start trade desk
+bindsym $mod+t		exec ~/thinkorswim/thinkorswim
+# download currently copied link as mp3
+bindsym $mod+Shift+m	exec ~/.local/bin/yt-dl-m
+# restart i3 instance (sets current changes in config)
+bindsym $mod+r		restart
+# alternative text editor (bloat)
+bindsym $mod+Shift+c	exec code
+# bind power key and print screen to custom scripts
+bindcode 124	exec ~/.local/bin/power
+bindsym F6	exec ~/.local/bin/maimpick
+# bind screen brightness keys to brightnessctl
+bindsym F8 exec --no-startup-id brightnessctl s +3%
+bindsym F7 exec --no-startup-id brightnessctl s 3%-
+# open any copied link using linkhandler
+bindsym $mod+o exec xclip -o | xargs -I{} linkhandler {} 
+# start dmenu (a program launcher)
+bindsym $mod+d exec --no-startup-id ~/.local/bin/d_go
+
+# #---Volume control---# #
+# Path to volume control
+set $volumepath ~/.local/bin
+
+# Command for the status line
+#   ie: i3blocks, i3status
+set $statuscmd i3blocks
+
+# Signal used to update the status line
+#   i3blocks uses SIGRTMIN+10 by default
+#   i3status uses SIGUSR1 by default
+set $statussig SIGRTMIN+10 
+
+# Amount to increase/decrease volume as a percentage
+set $volumestep 5
+
+# Using pulseaudio-utils (append "-s $sinkname" without quotes to override default sink)
+bindsym XF86AudioRaiseVolume exec --no-startup-id $volumepath/volume -n -t $statuscmd -u $statussig up $volumestep
+bindsym XF86AudioLowerVolume exec --no-startup-id $volumepath/volume -n -t $statuscmd -u $statussig down $volumestep
+bindsym XF86AudioMute        exec --no-startup-id $volumepath/volume -n -t $statuscmd -u $statussig mute && $refresh_i3status
+

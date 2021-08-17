@@ -1,0 +1,10 @@
+#!/bin/bash
+. "${HOME}/.cache/wal/colors.sh"
+case "$(printf "a selected area\\ncurrent window\\nfull screen\\na selected area (copy)\\ncurrent window (copy)\\nfull screen (copy)" | dmenu -fn 'NotoMonoRegular:bold:pixelsize=16' -nb "$color2" -nf "$color0" -sb "$color0" -sf "$color2" -l 8 -i -p "Screenshot which area?")" in
+"a selected area") maim -s ~/Media/Pictures/Screenshots/pic-selected-"$(date '+%y%m%d-%H%M-%S').png" ;;
+"current window") maim -i "$(xdotool getactivewindow)" ~/Media/Pictures/Screenshots/pic-window-"$(date '+%y%m%d-%H%M-%S').png" ;;
+"full screen") sleep 1s && maim ~/Media/Pictures/Screenshots/pic-full-"$(date '+%y%m%d-%H%M-%S').png" ;;
+"a selected area (copy)") maim -s | xclip -selection clipboard -t image/png ;;
+"current window (copy)") maim -i "$(xdotool getactivewindow)" | xclip -selection clipboard -t image/png ;;
+"full screen (copy)") sleep 1s && maim | xclip -selection clipboard -t image/png ;;
+esac

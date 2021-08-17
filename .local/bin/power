@@ -1,0 +1,6 @@
+#!/bin/sh
+case "$(printf "Log Out\\nShutdown\\nRestart" | dmenu -l 6 -i -fn 'NotoMonoRegular:bold:pixelsize=24'  -nb '#191919' -nf '#BF4040' -sb '#BF4040' -sf '#191919' -p "POWER MENU")" in
+"Log Out") i3-msg exit ;;
+"Shutdown") shutdown -h now ;;
+"Restart") shutdown -r now  ;;
+esac

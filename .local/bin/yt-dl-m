@@ -1,0 +1,3 @@
+#!/bin/bash
+
+xclip -o | xargs -I{} youtube-dl -o "`$HOME`/Media/Music/%(title)s-%(id)s.%(ext)s" --audio-format mp3 --audio-quality 0 --print-json --no-warnings -x {} | jq -r .title | xargs -I{}  notify-send "Download of {} Completed" | notify-send "Download Started"

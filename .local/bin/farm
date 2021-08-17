@@ -1,0 +1,1 @@
+cd /home/james/Media/chia-blockchain && . ./activate && cd chia-blockchain-gui && npm run electron &
