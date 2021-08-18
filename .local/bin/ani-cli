@@ -246,7 +246,7 @@ shift $((OPTIND - 1))
 case $scrape in
 	query)
 		get_search_query "$*"
-		search_results=$(search_anime "$query")
+		search_results=$(search_anime "${query// /_}")
 		[ -z "$search_results" ] && die "No search results found"
 		anime_selection "$search_results"
 		episode_selection
